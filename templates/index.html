@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reilfence Cipher - Ethical Hacker Edition</title>
+    <style>
+        body {
+            background-color: #2f2f2f;
+            color: #ffffff;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #ff9900;
+            text-shadow: 2px 2px #000000;
+        }
+
+        form {
+            border: 2px solid #ff9900;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            border-radius: 10px;
+            background-color: #3a3a3a;
+        }
+
+        label {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ff9900;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            background-color: #3a3a3a;
+            color: #ffffff;
+            outline: none;
+        }
+
+        button {
+            background-color: #ff9900;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 2px 2px #000000;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e68a00;
+        }
+
+        h2 {
+            margin-top: 30px;
+            font-size: 28px;
+            color: #ff9900;
+            text-shadow: 1px 1px #000000;
+        }
+
+        .result {
+            border: 2px solid #ff9900;
+            padding: 20px;
+            max-width: 500px;
+            margin: 30px auto;
+            border-radius: 10px;
+            background-color: #3a3a3a;
+        }
+
+        .result p {
+            margin: 0;
+            font-size: 18px;
+            color: #ffffff;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reilfence Cipher </h1>
+    <form method="post">
+        <label for="text">Enter Text:</label>
+        <input type="text" name="text" value="{{ text }}" required>
+        <br>
+        <label for="rails">Rails:</label>
+        <input type="number" name="rails" value="{{ rails }}" required>
+        <br>
+        <label for="action">Choose Action:</label>
+        <select name="action">
+            <option value="encrypt">Encrypt</option>
+            <option value="decrypt">Decrypt</option>
+        </select>
+        <br>
+        <button type="submit">Encrypt/Decrypt</button>
+    </form>
+
+    {% if result %}
+    <div class="result">
+        <h2>Result:</h2>
+        <p>{{ result }}</p>
+    </div>
+    {% endif %}
+</body>
+</html>
