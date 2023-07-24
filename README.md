@@ -8,11 +8,11 @@
 
 3.Define the Reilfence Cipher Functions:
   * Implement functions to perform Reilfence cipher encryption and decryption. Below is       a simple implementation of the Reilfence cipher algorithm
-     - refer app.py
+     - refer app1.py
 
 4.Create Flask Routes:
    In your app.py, define Flask routes to handle the user input and display the results.
-    -refer app.py
+    -refer app1.py
 5.Create HTML Template:
 
   *  Create a folder named templates inside your project directory.
