@@ -1,0 +1,374 @@
+db.musician.insertMany([
+{
+ssn:1,
+name:"A.R.Rahman",
+address:"Hydrabad",
+phone:8987095643,
+instrument:[101,102,103,104],
+album_id:[21,22]
+},
+{
+ssn:2,
+name:"Lata",
+address:"Blore",
+phone:8870762190,
+instrument:[101,102],
+album_id:[]
+},
+{
+ssn:3,
+name:"Arman",
+address:"Hyderabad",
+phone:8013762190,
+instrument:[101,102],
+album_id:[23]
+},
+{
+ssn:4,
+name:"Shankar",
+address:"Mysore",
+phone:9903762190,
+instrument:[101,102],
+album_id:[24]
+},
+{
+ssn:5,
+name:"Shreya",
+address:"Mumbai",
+phone:9013762190,
+instrument:[101,102],
+album_id:[25]
+}
+])
+............................
+db.album.insertMany([
+{
+_id:21,
+title:"Soulful Melodies",
+date:"2023-01-21",
+format:"cd",
+songs_id:[50,51,55,56]
+},
+{
+_id:22,
+title:"Classic Songs",
+date:"2010-08-12",
+format:"cassette",
+songs_id:[57,58]
+},
+{
+_id:23,
+title:"DJ Beats",
+date:"2019-02-23",
+format:"mc",
+songs_id:[50,53]
+},
+{
+_id:24,
+title:"Heartful Tunes",
+date:"2023-09-10",
+format:"mc",
+songs_id:[50,54]
+},
+{
+_id:25,
+title:"Classical songs",
+date:"2021-07-12",
+format:"cd",
+songs_id:[50,60]
+}
+])
+--------------------------------
+db.song.insertMany([
+{
+_id:50,
+song_title:"Melody of the day",
+author:"Julie"
+},
+{
+_id:51,
+song_title:"Melody in Motion",
+author:"Spooky"
+},
+{
+_id:53,
+song_title:"Tunes to Stars",
+author:"john"
+},
+{
+_id:54,
+song_title:"Rhythm of Rain",
+author:"Shreya"
+},
+{
+_id:55,
+song_title:"Heartful music",
+author:"Davis"
+},
+{
+_id:56,
+song_title:"Moonlit songs",
+author:"Martin"
+},
+{
+_id:57,
+song_title:"Music Dreams",
+author:"Alok"
+},
+{
+_id:58,
+song_title:"hearch hacker",
+author:"Soubhiya"
+},
+{
+_id:60,
+song_title:"Classic Gaana",
+author:"Shankar"
+}
+])
+..........................
+db.instrument.insertMany([
+{
+_id:101,
+name:"guitar"
+},
+{
+_id:102,
+name:"flute"
+},
+{
+_id:103,
+name:"Sitar"
+},
+{
+_id:104,
+name:"Piano"
+}
+])
+
+------------------------------------------
+
+1.LIST MUSICIAN NAME,TITLE OF THE SONG WHICH HE HAS PLAYED,THE ALBUM IN WHICH 
+SONG HAS OCCURED.
+
+db.musician.aggregate([
+  {
+    $unwind: "$album_id"
+  },
+  {
+    $lookup: {
+      from: "album",
+      localField: "album_id",
+      foreignField: "_id",
+      as: "album"
+    }
+  },
+  {
+    $unwind: "$album"
+  },
+  {
+    $lookup: {
+      from: "song",
+      localField: "album.songs_id",
+      foreignField: "_id",
+      as: "songs"
+    }
+  },
+  {
+    $unwind: "$songs"
+  },
+  {
+    $project: {
+      _id: 0,
+      Musician: "$name",
+      Song: "$songs.song_title",
+      Album: "$album.title"
+    }
+  }
+])
+
+
+
+
+
+{ "Musician" : "A.R.Rahman", "Song" : "Melody of the day", "Album" : "Soulful Melodies" }
+{ "Musician" : "A.R.Rahman", "Song" : "Melody in Motion", "Album" : "Soulful Melodies" }
+{ "Musician" : "A.R.Rahman", "Song" : "Heartful music", "Album" : "Soulful Melodies" }
+{ "Musician" : "A.R.Rahman", "Song" : "Moonlit songs", "Album" : "Soulful Melodies" }
+{ "Musician" : "A.R.Rahman", "Song" : "Music Dreams", "Album" : "Classic Songs" }
+{ "Musician" : "A.R.Rahman", "Song" : "hearch hacker", "Album" : "Classic Songs" }
+{ "Musician" : "Arman", "Song" : "Melody of the day", "Album" : "DJ Beats" }
+{ "Musician" : "Arman", "Song" : "Tunes to Stars", "Album" : "DJ Beats" }
+{ "Musician" : "Shankar", "Song" : "Melody of the day", "Album" : "Heartful Tunes" }
+{ "Musician" : "Shankar", "Song" : "Rhythm of Rain", "Album" : "Heartful Tunes" }
+{ "Musician" : "Shreya", "Song" : "Melody of the day", "Album" : "Classical songs" }
+{ "Musician" : "Shreya", "Song" : "Classic Gaana", "Album" : "Classical songs" }
+
+
+
+
+
+
+
+....................................................
+2.)
+
+db.musician.find({album_id: []})
+
+
+
+{ "_id" : ObjectId("65018bd47026eeab4828bee8"), "ssn" : 2, "name" : "Lata", "address" : "Blore", "phone" : 8870762190, "instrument" : [ 101, 102 ], "album_id" : [ ] }
+
+
+
+...................................................
+3.)
+db.song.aggregate([
+  {
+    $lookup: {
+      from: "album",
+      localField: "_id",
+      foreignField: "songs_id",
+      as: "albums"
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      Song_Title: "$song_title",
+      Author: "$author",
+      Album_Count: { $size: "$albums" }
+    }
+  },
+  {
+    $match: {
+      Album_Count: { $gt: 3 }
+    }
+  }
+])
+
+
+{ "Song_Title" : "Melody of the day", "Author" : "Julie", "Album_Count" : 4 }
+
+..............................................
+4.)
+db.musician.aggregate([
+  {
+    $unwind: "$instrument"
+  },
+  {
+    $group: {
+      _id: "$instrument.ins_name",
+      Musicians: { $addToSet: "$name" }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      Instrument: "$_id",
+      NumberOfMusicians: { $size: "$Musicians" }
+    }
+  },
+  {
+    $group: {
+      _id: null,
+      Instruments: { $push: { Instrument: "$Instrument", NumberOfMusicians: "$NumberOfMusicians" } },
+      AverageMusiciansPerInstrument: { $avg: "$NumberOfMusicians" }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      Instruments: 1,
+      AverageMusiciansPerInstrument: 1
+    }
+  }
+])
+
+
+
+{ "Instruments" : [ { "Instrument" : null, "NumberOfMusicians" : 5 } ], "AverageMusiciansPerInstrument" : 5 }
+
+..............................................................................
+5.)var avgSongs = db.musician.aggregate([
+...   {
+...     $unwind: "$album_id"
+...   },
+...   {
+...     $lookup: {
+...       from: "album",
+...       localField: "album_id",
+...       foreignField: "_id",
+...       as: "albums"
+...     }
+...   },
+...   {
+...     $unwind: "$albums"
+...   },
+...   {
+...     $group: {
+...       _id: null,
+...       averageSongs: {
+...         $avg: { $size: "$albums.songs_id" }
+...       }
+...     }
+...   }
+... ]).toArray()[0].averageSongs;
+> 
+> 
+> db.musician.aggregate([
+...   {
+...     $match: {
+...       "instrument": { $all: [101, 102] }, // Match musicians who play both guitar and flute
+...       "album_id": { $ne: null } // Ensure they have produced at least one album
+...     }
+...   },
+...   {
+...     $lookup: {
+...       from: "album",
+...       localField: "album_id",
+...       foreignField: "_id",
+...       as: "albums"
+...     }
+...   },
+...   {
+...     $unwind: "$albums"
+...   },
+...   {
+...     $group: {
+...       _id: "$_id",
+...       "Musician Name": { $first: "$name" },
+...       totalSongs: { $sum: { $size: "$albums.songs_id" } },
+...       "Album Title": { $addToSet: "$albums.title" } // Collect all album titles for the musician
+...     }
+...   },
+...   {
+...     $match: {
+...       totalSongs: { $gt: avgSongs } // Filter musicians with more songs than the average
+...     }
+...   },
+...   {
+...     $project: {
+...       _id: 0,
+...       "Musician Name": 1,
+...       "Total Songs Produced": "$totalSongs",
+...       "Album Title": 1 // Include the collected album titles
+...     }
+...   }
+... ])
+{ "Musician Name" : "A.R.Rahman", "Album Title" : [ "Classic Songs", "Soulful Melodies" ], "Total Songs Produced" : 6 }
+
+
+
+
+..................................................................
+6.)
+db.musician.find({
+instrument:[101,102,103]
+})
+
+
+
+{ "_id" : ObjectId("65018bd47026eeab4828bee7"), "ssn" : 1, "name" : "A.R.Rahman", "address" : "Hydrabad", "phone" : 8987095643, "instrument" : [ 101, 102, 103, 104 ], "album_id" : [ 21, 22 ] }
+
+..................................

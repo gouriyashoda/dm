@@ -1,0 +1,180 @@
+Creating tables.
+
+CREATE TABLE PANEL(PV_NO VARCHAR(5) PRIMARY KEY,
+                    PV_TYPE CHAR(20),
+                    CAPACITY INT(3),
+                    PRICE BIGINT(5));
+
+CREATE TABLE VENDOR (TIN_NO VARCHAR(5) PRIMARY KEY,
+                     VENDOR_NAME VARCHAR(60),
+                     VENDOR_PHONE VARCHAR(14),
+                     VENDOR_ADDRESS VARCHAR(100));
+
+CREATE TABLE USER (H_NO VARCHAR(5) PRIMARY KEY,
+                   USER_ADDRESS VARCHAR(50));
+
+
+CREATE TABLE INSTALL (PV_NO VARCHAR(5),
+                      TIN_NO VARCHAR(5),
+                      H_NO VARCHAR(5),
+                      COST BIGINT(6),
+                      INSTALL_DATE DATE,
+                      TYPE VARCHAR(20),
+                      PRIMARY KEY (PV_NO,TIN_NO,H_NO), 
+                      FOREIGN KEY (PV_NO) REFERENCES PANEL(PV_NO),
+                      FOREIGN KEY (TIN_NO) REFERENCES VENDOR(TIN_NO),
+                      FOREIGN KEY (H_NO) REFERENCES USER (H_NO));
+
+CREATE TABLE SOLD_BY(PV_NO VARCHAR(5),
+                     TIN_NO VARCHAR(5),
+                     PRIMARY KEY (PV_NO,TIN_NO),
+                     FOREIGN KEY (PV_NO) REFERENCES PANEL (PV_NO),
+                     FOREIGN KEY (TIN_NO) REFERENCES VENDOR (TIN_NO));
+
+CREATE TABLE PURCHASED_BY(PV_NO VARCHAR(5),
+                          H_NO VARCHAR(5),
+                          PRIMARY KEY (PV_NO,H_NO),
+                          FOREIGN KEY (PV_NO) REFERENCES PANEL (PV_NO),
+                          FOREIGN KEY (H_NO) REFERENCES USER(H_NO));
+
+
+
+insertion 
+
+
+-- Populate PANEL
+INSERT INTO PANEL (PV_NO, PV_TYPE, CAPACITY, PRICE)
+VALUES
+    ('PV021', 'Monocrystalline', 7, 45000),
+    ('PV022', 'Polycrystalline', 6, 62000),
+    ('PV023', 'Monocrystalline', 10, 60000),
+    ('PV024', 'Polycrystalline', 10, 82000),
+    ('PV025', 'Monocrystalline', 12, 70000),
+    ('PV026', 'Polycrystalline', 12, 92000),
+    ('PV027', 'Monocrystalline', 14, 80000),
+    ('PV028', 'Polycrystalline', 14, 105000),
+    ('PV029', 'Monocrystalline', 18, 95000),
+    ('PV030', 'Polycrystalline', 18, 115000);
+
+-- Populate VENDOR
+INSERT INTO VENDOR (TIN_NO, VENDOR_NAME, VENDOR_PHONE, VENDOR_ADDRESS)
+VALUES
+    ('TIN21', 'SunPower Solutions', '1234567890', '123 Oak Street, Bangalore'),
+    ('TIN22', 'SolarTech India', '9876543210', '456 Maple Avenue, Chennai'),
+    ('TIN23', 'EnergySaver Innovations', '7890123456', '789 Pine Road, Mumbai'),
+    ('TIN24', 'EcoSolar Systems', '2345678901', '567 Cedar Drive, Delhi'),
+    ('TIN25', 'GreenPower', '8765432109', '890 Elm Lane, Hyderabad'),
+    ('TIN26', 'SolarGenius', '3456789012', '345 Birch Court, Kolkata'),
+    ('TIN27', 'SunTech Solutions', '6543210987', '678 Pine Road, Pune'),
+    ('TIN28', 'EcoTech', '4321098765', '123 Redwood Drive, Ahmedabad'),
+    ('TIN29', 'SolarX', '8901234567', '456 Oak Avenue, Jaipur'),
+    ('TIN30', 'GreenEnergy', '9012345678', '789 Maple Road, Lucknow');
+
+-- Populate USER
+INSERT INTO USER (H_NO, USER_ADDRESS)
+VALUES
+    ('H021', 'House 21, Bangalore'),
+    ('H022', 'House 22, Chennai'),
+    ('H023', 'House 23, Mumbai'),
+    ('H024', 'House 24, Delhi'),
+    ('H025', 'House 25, Hyderabad'),
+    ('H026', 'House 26, Kolkata'),
+    ('H027', 'House 27, Pune'),
+    ('H028', 'House 28, Ahmedabad'),
+    ('H029', 'House 29, Jaipur'),
+    ('H030', 'House 30, Lucknow');
+
+-- Populate INSTALL
+INSERT INTO INSTALL (PV_NO, TIN_NO, H_NO, COST, INSTALL_DATE, TYPE)
+VALUES
+    ('PV021', 'TIN21', 'H021', 47000, '2023-09-08', 'DOMESTIC'),
+    ('PV022', 'TIN21', 'H022', 64000, '2023-09-10', 'COMMERCIAL'),
+    ('PV023', 'TIN22', 'H023', 61000, '2023-09-12', 'DOMESTIC'),
+    ('PV024', 'TIN22', 'H024', 85000, '2023-09-15', 'COMMERCIAL'),
+    ('PV025', 'TIN23', 'H025', 73000, '2023-09-18', 'DOMESTIC'),
+    ('PV026', 'TIN23', 'H026', 98000, '2023-09-20', 'COMMERCIAL'),
+    ('PV027', 'TIN24', 'H027', 81000, '2023-09-22', 'DOMESTIC'),
+    ('PV028', 'TIN24', 'H028', 104000, '2023-09-25', 'COMMERCIAL'),
+    ('PV029', 'TIN25', 'H029', 96000, '2023-09-28', 'DOMESTIC'),
+    ('PV030', 'TIN25', 'H030', 118000, '2023-09-30', 'COMMERCIAL');
+
+-- Populate SOLD_BY
+INSERT INTO SOLD_BY (PV_NO, TIN_no)
+VALUES
+    ('PV021', 'TIN21'),
+    ('PV022', 'TIN22'),
+    ('PV023', 'TIN23'),
+    ('PV024', 'TIN24'),
+    ('PV025', 'TIN25'),
+    ('PV026', 'TIN26'),
+    ('PV027', 'TIN27'),
+    ('PV028', 'TIN28'),
+    ('PV029', 'TIN29'),
+    ('PV030', 'TIN30');
+
+-- Populate PURCHASED_BY
+INSERT INTO PURCHASED_BY (PV_NO, H_NO)
+VALUES
+    ('PV021', 'H021'),
+    ('PV022', 'H022'),
+    ('PV023', 'H023'),
+    ('PV024', 'H024'),
+    ('PV025', 'H025'),
+    ('PV026', 'H026'),
+    ('PV027', 'H027'),
+    ('PV028', 'H028'),
+    ('PV029', 'H029'),
+    ('PV030', 'H030');
+
+
+Certainly! Here are the queries you requested without using the JOIN operation:
+
+*i. List the distributor with the most installations in domestic places:*
+sql
+SELECT V.VENDOR_NAME, COUNT(I.H_NO) AS INSTALLATION_COUNT
+FROM VENDOR V, INSTALL I
+WHERE V.TIN_NO = I.TIN_NO AND I.TYPE = 'DOMESTIC'
+GROUP BY V.VENDOR_NAME
+ORDER BY INSTALLATION_COUNT DESC
+LIMIT 1;
+
+
+*ii. List the place name with the highest capacity panel installed:*
+sql
+SELECT U.USER_ADDRESS, P.PV_TYPE, P.CAPACITY
+FROM PANEL P, INSTALL I, USER U
+WHERE P.PV_NO = I.PV_NO AND I.H_NO = U.H_NO
+ORDER BY P.CAPACITY DESC
+LIMIT 1;
+
+
+*iii. Display the area where monocrystalline panels are installed:*
+sql
+SELECT U.USER_ADDRESS
+FROM PANEL P, INSTALL I, USER U
+WHERE P.PV_NO = I.PV_NO AND I.H_NO = U.H_NO AND P.PV_TYPE = 'Monocrystalline';
+
+
+*iv. For the specific area, display the total installation charges for both types of PV modules:*
+sql
+SELECT U.USER_ADDRESS, SUM(I.COST) AS TOTAL_COST
+FROM INSTALL I, USER U
+WHERE I.H_NO = U.H_NO
+GROUP BY U.USER_ADDRESS;
+
+
+*v. List the details of distributors and panels that are the oldest installations:*
+sql
+SELECT V.VENDOR_NAME, P.PV_TYPE, I.INSTALL_DATE
+FROM VENDOR V, SOLD_BY S, PANEL P, INSTALL I
+WHERE V.TIN_NO = S.TIN_NO AND S.PV_NO = P.PV_NO AND P.PV_NO = I.PV_NO
+  AND I.INSTALL_DATE = (SELECT MIN(INSTALL_DATE) FROM INSTALL)
+ORDER BY I.INSTALL_DATE;
+
+
+*vi. Find the average sales of both types of panels in only commercial places:*
+sql
+SELECT P.PV_TYPE, AVG(I.COST) AS AVERAGE_SALES
+FROM PANEL P, INSTALL I
+WHERE P.PV_NO = I.PV_NO AND I.TYPE = 'COMMERCIAL'
+GROUP BY P.PV_TYPE;
